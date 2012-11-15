@@ -5,7 +5,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
-namespace Mixpanel
+namespace MixpanelApi
 {
     [BaseType (typeof (NSObject))]
     interface Mixpanel {

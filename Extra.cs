@@ -1,7 +1,7 @@
 using System;
 using MonoTouch.Foundation;
 
-namespace Mixpanel
+namespace MixpanelApi
 {
     public partial class MixpanelPeople 
     {
