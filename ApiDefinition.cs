@@ -9,16 +9,16 @@ namespace MixpanelApi
 {
     [BaseType (typeof (NSObject))]
     interface Mixpanel {
-        [Export ("people")]
+        [Export ("people", ArgumentSemantic.Retain)]
         MixpanelPeople People { get;  }
         
-        [Export ("distinctId")]
+        [Export ("distinctId", ArgumentSemantic.Copy)]
         string DistinctId { get; [Bind ("identify:")] set;  }
         
-        [Export ("nameTag")]
+        [Export ("nameTag", ArgumentSemantic.Copy)]
         string NameTag { get; set;  }
         
-        [Export ("serverURL")]
+        [Export ("serverURL", ArgumentSemantic.Copy)]
         string ServerURL { get; set;  }
         
         [Export ("flushInterval")]
@@ -42,7 +42,7 @@ namespace MixpanelApi
         
         [Static]
         [Export ("sharedInstance")]
-        Mixpanel SharedInstance ();
+        Mixpanel SharedInstance { get; }
         
         [Export ("initWithToken:andFlushInterval:")]
         IntPtr Constructor (string apiToken, uint flushInterval);
@@ -80,7 +80,7 @@ namespace MixpanelApi
     
     [BaseType (typeof (NSObject))]
     interface MixpanelPeople {
-        [Export ("distinctId")]
+        [Export ("distinctId", ArgumentSemantic.Copy)]
         string DistinctId { get;  [Bind ("identify:")] set;  }
         
         [Export ("addPushDeviceToken:")]
