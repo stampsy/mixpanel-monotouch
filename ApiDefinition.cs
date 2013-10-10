@@ -7,7 +7,7 @@ using MonoTouch.UIKit;
 
 namespace MixpanelApi
 {
-    [BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof(MixpanelDelegate) })]
     interface Mixpanel {
         [Export ("people", ArgumentSemantic.Retain)]
         MixpanelPeople People { get;  }
@@ -61,6 +61,9 @@ namespace MixpanelApi
         
         [Export ("registerSuperPropertiesOnce:defaultValue:")]
         void RegisterSuperPropertiesOnce (NSDictionary properties, NSObject defaultValue);
+
+		[Export ("unregisterSuperProperty:")]
+		void UnregisterSuperProperty (string propertyName);
         
         [Export ("clearSuperProperties")]
         void ClearSuperProperties ();
@@ -80,10 +83,7 @@ namespace MixpanelApi
     
     [BaseType (typeof (NSObject))]
     interface MixpanelPeople {
-        [Export ("distinctId", ArgumentSemantic.Copy)]
-        string DistinctId { get;  [Bind ("identify:")] set;  }
-        
-        [Export ("addPushDeviceToken:")]
+		[Export ("addPushDeviceToken:")]
         void AddPushDeviceToken (NSData deviceToken);
         
         [Export ("set:")]
@@ -91,13 +91,28 @@ namespace MixpanelApi
         
         [Export ("set:to:")]
         void Set (string property, NSObject toObject);
+
+		[Export("setOnce:")]
+		void SetOnce (NSDictionary properties);
         
         [Export ("increment:")]
         void Increment (NSDictionary properties);
         
         [Export ("increment:by:")]
         void Increment (string property, NSNumber amount);
-        
+
+		[Export ("append:")]
+		void Append(NSDictionary properties);
+
+		[Export ("trackCharge:")]
+		void TrackCharge(NSNumber amount);
+
+		[Export ("trackCharge:withProperties:")]
+		void TrackCharge(NSNumber amount, NSDictionary properties);
+
+		[Export ("clearCharges")]
+		void ClearCharges();
+
         [Export ("deleteUser")]
         void DeleteUser ();
     }
@@ -105,7 +120,7 @@ namespace MixpanelApi
     [BaseType (typeof (NSObject))]
     [Model]
     interface MixpanelDelegate {
-        [Export ("mixpanelWillFlush:")]
+		[Export ("mixpanelWillFlush:"), DelegateName("MixpanelWillFlushDelegate"), DefaultValue("null")]
         bool WillFlush (Mixpanel mixpanel);
     }
 }

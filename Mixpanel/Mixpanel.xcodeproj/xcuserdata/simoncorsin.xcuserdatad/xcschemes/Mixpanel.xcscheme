@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0450"
+   LastUpgradeVersion = "0500"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1125DD54164BEE2A00FE636B"
-               BuildableName = "libMixPanelBinding.a"
-               BlueprintName = "MixPanelBinding"
-               ReferencedContainer = "container:MixPanelBinding.xcodeproj">
+               BlueprintIdentifier = "DC6BA4581806E3040039078A"
+               BuildableName = "libMixpanel.a"
+               BlueprintName = "Mixpanel"
+               ReferencedContainer = "container:Mixpanel.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,6 +28,16 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DC6BA4681806E3050039078A"
+               BuildableName = "MixpanelTests.xctest"
+               BlueprintName = "MixpanelTests"
+               ReferencedContainer = "container:Mixpanel.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
