@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>792A3A3F-2BCE-4BA2-A456-00E71E0AD529</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Mixpanel</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>188B1E9C-2DD7-4E0A-AEFF-F50A77AD5FA1</key>
+		<string>ssh://github.com/rFlex/mixpanel-monotouch.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Mixpanel/Mixpanel/Mixpanel.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>188B1E9C-2DD7-4E0A-AEFF-F50A77AD5FA1</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/rFlex/mixpanel-monotouch.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>188B1E9C-2DD7-4E0A-AEFF-F50A77AD5FA1</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>188B1E9C-2DD7-4E0A-AEFF-F50A77AD5FA1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mixpanel-monotouch</string>
+		</dict>
+	</array>
+</dict>
+</plist>

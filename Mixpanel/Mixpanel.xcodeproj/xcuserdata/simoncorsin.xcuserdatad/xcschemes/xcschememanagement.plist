@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>MixPanelBinding.xcscheme</key>
+		<key>Mixpanel.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1125DD54164BEE2A00FE636B</key>
+		<key>DC6BA4581806E3040039078A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DC6BA4681806E3050039078A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -16,6 +16,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @class    MixpanelPeople;
 @protocol MixpanelDelegate;
 
@@ -58,51 +61,52 @@
  @discussion
  See the documentation for MixpanelDelegate below for more information.
  */
-@property(nonatomic,readonly,retain) MixpanelPeople *people;
+@property(atomic,readonly,retain) MixpanelPeople *people;
 
 /*!
  @property
  
  @abstract
- Gets and sets the distinct ID of the current user.
+ The distinct ID of the current user.
  
  @discussion
  A distinct ID is a string that uniquely identifies one of your users.
  Typically, this is the user ID from your database. By default, we'll use a
- hash of the MAC address of the device.
+ hash of the MAC address of the device. To change the current distinct ID,
+ use the <code>identify:</code> method.
  */
-@property(nonatomic,setter=identify:,copy) NSString *distinctId;
+@property(atomic,readonly,copy) NSString *distinctId;
 
 /*!
  @property
  
  @abstract
- Gets and sets the current user's name in Mixpanel Streams.
+ Current user's name in Mixpanel Streams.
  */
-@property(nonatomic,copy) NSString *nameTag;
+@property(atomic,copy) NSString *nameTag;
 
 /*!
  @property
  
  @abstract
- Gets and sets the base URL used for Mixpanel API requests.
+ The base URL used for Mixpanel API requests.
  
  @discussion
- Useful if you need to proxy Mixpanel requests. Defaults to 
+ Useful if you need to proxy Mixpanel requests. Defaults to
  https://api.mixpanel.com.
  */
-@property(nonatomic,copy) NSString *serverURL;
+@property(atomic,copy) NSString *serverURL;
 
 /*!
  @property
  
  @abstract
- Gets and sets the flush timer's interval.
+ Flush timer's interval.
  
  @discussion
  Setting a flush interval of 0 will turn off the flush timer.
  */
-@property(nonatomic,assign) NSUInteger flushInterval;
+@property(atomic) NSUInteger flushInterval;
 
 /*!
  @property
@@ -115,31 +119,32 @@
  Defaults to YES. Only affects apps targeted at iOS 4.0, when background 
  task support was introduced, and later.
  */
-@property(nonatomic,assign) BOOL flushOnBackground;
+@property(atomic) BOOL flushOnBackground;
 
 /*!
  @property
 
  @abstract
- Controls whether to show spinning network activity indicator when flushing data to the Mixpanel servers.
+ Controls whether to show spinning network activity indicator when flushing
+ data to the Mixpanel servers.
 
  @discussion
  Defaults to YES.
  */
-@property(nonatomic,assign) BOOL showNetworkActivityIndicator;
+@property(atomic) BOOL showNetworkActivityIndicator;
 
 /*!
  @property
  
  @abstract
- Gets and sets the a MixpanelDelegate object that can be used to assert
- fine-grain control over Mixpanel network activity.
+ The a MixpanelDelegate object that can be used to assert fine-grain control
+ over Mixpanel network activity.
  
  @discussion
  Using a delegate is optional. See the documentation for MixpanelDelegate 
  below for more information.
  */
-@property(nonatomic,assign) id<MixpanelDelegate> delegate; // allows fine grain control over uploading (optional)
+@property(atomic,assign) id<MixpanelDelegate> delegate; // allows fine grain control over uploading (optional)
 
 /*!
  @method
@@ -165,7 +170,7 @@
  
  @param apiToken        your project token
  */
-+ (id)sharedInstanceWithToken:(NSString *)apiToken;
++ (Mixpanel *)sharedInstanceWithToken:(NSString *)apiToken;
 
 /*!
  @method
@@ -177,7 +182,7 @@
  The API must be initialized with <code>sharedInstanceWithToken:</code> before
  calling this class method.
  */
-+ (id)sharedInstance;
++ (Mixpanel *)sharedInstance;
 
 /*!
  @method
@@ -194,7 +199,34 @@
  @param apiToken        your project token
  @param startFlushTimer whether to start the background flush timer
  */
-- (id)initWithToken:(NSString *)apiToken andFlushInterval:(NSUInteger)flushInterval;
+- (instancetype)initWithToken:(NSString *)apiToken andFlushInterval:(NSUInteger)flushInterval;
+
+/*!
+ @property
+
+ @abstract
+ Sets the distinct ID of the current user.
+
+ @discussion
+ By default, Mixpanel will set the distinct ID to the device's iOS ID for
+ Advertising (IFA). The IFA depends on the the Ad Support framework, which is
+ only available in iOS 6 and later. For earlier platforms, we fallback to ODIN1
+ (see https://code.google.com/p/odinmobile/wiki/ODIN1).
+
+ For tracking events, you do not need to call <code>identify:</code> if you
+ want to use the default.  However, <b>Mixpanel People always requires an
+ explicit call to <code>identify:</code></b>. If calls are made to
+ <code>set:</code>, <code>increment</code> or other <code>MixpanelPeople</code>
+ methods prior to calling <code>identify:</code>, then they are queued up and
+ flushed once <code>identify:</code> is called.
+
+ If you'd like to use the default distinct ID for Mixpanel People as well
+ (recommended), call <code>identify:</code> using the current distinct ID:
+ <code>[mixpanel identify:mixpanel.distinctId]</code>.
+
+ @param distinctId string that uniquely identifies the current user
+ */
+- (void)identify:(NSString *)distinctId;
 
 /*!
  @method
@@ -215,9 +247,9 @@
  @discussion
  Properties will allow you to segment your events in your Mixpanel reports.
  Property keys must be <code>NSString</code> objects and values must be
- <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>, 
- <code><NSDate</code>, <code>NSArray</code> or <code>NSDictionary</code>
- objects.
+ <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
+ <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
+ <code>NSURL</code> objects.
  
  @param event           event name
  @param properties      properties dictionary
@@ -233,11 +265,11 @@
  @discussion
  Super properties, once registered, are automatically sent as properties for
  all event tracking calls. They save you having to maintain and add a common
- set of properties to your events.  Property keys must be <code>NSString</code> objects and values must be
- <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code><NSDate</code>, <code>NSArray</code> or <code>NSDictionary</code>
- objects.
-
+ set of properties to your events. Property keys must be <code>NSString</code>
+ objects and values must be <code>NSString</code>, <code>NSNumber</code>,
+ <code>NSNull</code>, <code>NSArray</code>, <code>NSDictionary</code>,
+ <code>NSDate</code> or <code>NSURL</code> objects.
+ 
  @param properties      properties dictionary
  */
 - (void)registerSuperProperties:(NSDictionary *)properties;
@@ -252,8 +284,8 @@
  @discussion
  Property keys must be <code>NSString</code> objects and values must be
  <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code><NSDate</code>, <code>NSArray</code> or <code>NSDictionary</code>
- objects.
+ <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
+ <code>NSURL</code> objects.
 
  @param properties      properties dictionary
  */
@@ -269,8 +301,8 @@
  @discussion
  Property keys must be <code>NSString</code> objects and values must be
  <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code><NSDate</code>, <code>NSArray</code> or <code>NSDictionary</code>
- objects.
+ <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
+ <code>NSURL</code> objects.
 
  @param properties      properties dictionary
  @param defaultValue    overwrite existing properties that have this value
@@ -279,7 +311,27 @@
 
 /*!
  @method
- 
+
+ @abstract
+ Removes a previously registered super property.
+
+ @discussion
+ As an alternative to clearing all properties, unregistering specific super
+ properties prevents them from being recorded on future events. This operation
+ does not affect the value of other super properties. Any property name that is
+ not registered is ignored.
+
+ Note that after removing a super property, events will show the attribute as
+ having the value <code>undefined</code> in Mixpanel until a new value is
+ registered.
+
+ @param propertyName   array of property name strings to remove
+ */
+- (void)unregisterSuperProperty:(NSString *)propertyName;
+
+/*!
+ @method
+
  @abstract
  Clears all currently set super properties.
  */
@@ -308,9 +360,10 @@
  Uploads queued data to the Mixpanel server.
  
  @discussion
- This happens automatically every 60 seconds, or as specified by the
- flushInterval property. You only need to call this method manually if you want
- to force a flush at a particular moment.
+ By default, queued data is flushed to the Mixpanel servers every minute (the
+ default for <code>flushInvterval</code>), and on background (since
+ <code>flushOnBackground</code> is on by default). You only need to call this
+ method manually if you want to force a flush at a particular moment.
  */
 - (void)flush;
 
@@ -322,11 +375,11 @@
  and People record queues to disk.
 
  @discussion
- This state will be recovered when the app is launched again if the Mixpanel library is
- initialized with the same project token. You do not need to call this method. For most
- use cases, the library listens for app state changes and handles persisting data as 
- needed. It can be useful in some special circumstances, though, for example, if you'd 
- like to track app crashes from main.m.
+ This state will be recovered when the app is launched again if the Mixpanel
+ library is initialized with the same project token. <b>You do not need to call
+ this method</b>. The library listens for app state changes and handles
+ persisting data as needed. It can be useful in some special circumstances,
+ though, for example, if you'd like to track app crashes from main.m.
  */
 - (void)archive;
 
@@ -365,27 +418,6 @@
 @interface MixpanelPeople : NSObject
 
 /*!
- @property
- 
- @abstract
- Sets the distinct ID for Mixpanel People calls.
- 
- @discussion
- If calls are made to <code>set:</code>, <code>increment</code> or other
- <code>MixpanelPeople</code> methods prior to calling <code>identify:</code>,
- then they are queued up and flushed once <code>identify:</code> is called.
- 
- This method only affects calls to Mixpanel People. To change the distinct ID
- of event tracking calls use the core Mixpanel @ref identify: method.
- 
- A distinct ID is a string string that uniquely identifies a user. Typically,
- this is their user ID from your database.
- 
- @param distinctId string that uniquely identifies the current user
- */
-@property(nonatomic,setter=identify:,copy) NSString *distinctId;
-
-/*!
  @method
  
  @abstract
@@ -394,8 +426,10 @@
  @discussion
  This will associate the device token with the current user in Mixpanel People,
  which will allow you to send push notifications to the user from the Mixpanel
- People web interface.
- 
+ People web interface. You should call this method with the <code>NSData</code>
+ token passed to
+ <code>application:didRegisterForRemoteNotificationsWithDeviceToken:</code>.
+
  @param deviceToken     device token as returned <code>application:didRegisterForRemoteNotificationsWithDeviceToken:</code>
  */
 - (void)addPushDeviceToken:(NSData *)deviceToken;
@@ -440,13 +474,31 @@
  @discussion
  Property keys must be <code>NSString</code> objects and values must be
  <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code><NSDate</code>, <code>NSArray</code> or <code>NSDictionary</code>
- objects.
+ <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
+ <code>NSURL</code> objects.
 
  @param property        property name
  @param object          property value
  */
 - (void)set:(NSString *)property to:(id)object;
+
+/*!
+ @method
+
+ @abstract
+ Set properties on the current user in Mixpanel People, but don't overwrite if
+ there is an existing value.
+
+ @discussion
+ This method is identical to <code>set:</code> except it will only set
+ properties that are not already set. It is particularly useful for collecting
+ data about the user's initial experience and source, as well as dates
+ representing the first time something happened.
+
+ @param properties       properties dictionary
+
+ */
+- (void)setOnce:(NSDictionary *)properties;
 
 /*!
  @method
@@ -474,6 +526,54 @@
  @param amount          amount to increment by
  */
 - (void)increment:(NSString *)property by:(NSNumber *)amount;
+
+/*!
+ @method
+
+ @abstract
+ Append values to list properties.
+
+ @discussion
+ Property keys must be <code>NSString</code> objects and values must be
+ <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
+ <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
+ <code>NSURL</code> objects.
+
+ @param properties      mapping of list property names to values to append
+ */
+- (void)append:(NSDictionary *)properties;
+
+/*!
+ @method
+
+ @abstract
+ Track money spent by the current user for revenue analytics.
+
+ @param amount          amount of revenue received
+ */
+- (void)trackCharge:(NSNumber *)amount;
+
+/*!
+ @method
+
+ @abstract
+ Track money spent by the current user for revenue analytics and associate
+ properties with the charge.
+
+ @discussion
+ Charge properties allow you segment on types of revenue. For instance, you
+ could record a product ID with each charge so that you could segement on it in
+ revenue analytics to see which products are generating the most revenue.
+ */
+- (void)trackCharge:(NSNumber *)amount withProperties:(NSDictionary *)properties;
+
+/*!
+ @method
+
+ @abstract
+ Delete current user's revenue history.
+ */
+- (void)clearCharges;
 
 /*!
  @method
